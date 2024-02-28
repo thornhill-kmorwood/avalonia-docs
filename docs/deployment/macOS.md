@@ -310,6 +310,17 @@ codesign --verify --verbose /path/to/MyApp.app
 
 Notarization allows your app to be distributed outside the macOS App Store. You can read more about it [here](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution). If you run into any issues during the process, Apple has a helpful document of potential fixes [here](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution/resolving_common_notarization_issues?language=objc).
 
+_As of November 2023, `altool` is no longer supported for notarizing._
+
+The following steps were created/discovered while notarizing an application in February 2024.
+
+1. Make sure your `.app` is codesigned properly:
+	`codesign --verify --verbose <Full path to application>.app`
+1. Create a `.zip` of your `.app`: _Note that using `zip` will make notarization fail, instead use `ditto`_
+	`ditto -c -k --sequesterRsrc --keepParent MyApp.app MyApp.zip`
+1. Notarize your application `.zip` file:
+	`xcrun notarytool submit <YourApplication.zip> --keychain-profile "<Profile Name>" --wait` 
+
 For more information on customizing your notarization workflow and more flags you may need to send when running `xcrun altool`, [check out Apple's documentation](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution/customizing_the_notarization_workflow?language=objc).
 
 The following steps were modified from [this StackOverflow post](https://stackoverflow.com/a/53121755/3938401):
